@@ -6,7 +6,8 @@ from posts.models import Blog
 
 
 class BlogSerializer(serializers.ModelSerializer):
-    comments = CommentUUIDSerializer(required=False, many=True)
+    # comments = CommentUUIDSerializer(required=False, many=True, )
+    comments = serializers.SerializerMethodField(method_name='get_comments')
 
     class Meta:
         model = Blog
@@ -25,12 +26,11 @@ class BlogSerializer(serializers.ModelSerializer):
     #     children = ChildDetailSerializer(Child.objects.filter(comment_id=comment_id), many=True)
     #     return children
     #
-    # def add_comment(self, post_id):
-    #     comments = Comment.objects.filter(post_id=post_id)
-    #     comments = CommentSerializer(comments, many=True)
-    #     for comment in comments:
-    #         comment['children'] = self._get_children(comment['uuid'])
-    #     return comments
+
+    def get_comments(self, obj):
+        comments = obj.comments.filter(parent=None)
+        serializer = CommentUUIDSerializer(comments, many=True)
+        return serializer.data
 
 
 class BlogCreateSerializer(serializers.ModelSerializer):

@@ -58,14 +58,13 @@ class CommentUpdateSerializer(serializers.ModelSerializer):
 
 
 class CommentUUIDSerializer(serializers.ModelSerializer):
-    uuid = serializers.UUIDField(required=True)
-    comment = serializers.UUIDField(required=False)
+    childs = CommentChildSerializer(required=False, many=True)
 
     class Meta:
         model = Comment
         fields = (
-            'uuid',
-            'comment'
+            'comment',
+            'childs'
         )
 
 
